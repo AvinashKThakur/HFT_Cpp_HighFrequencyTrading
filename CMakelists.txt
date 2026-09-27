@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.16)
+project(HFT_Cpp_HighFrequencyTrading CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
+add_compile_options(-Wall -Wextra)
+
+include_directories(include)
+find_package(Threads REQUIRED)
+
+add_executable(main src/main.cpp)
+target_link_libraries(main PRIVATE Threads::Threads)
+
+add_executable(test_orderbook src/test_orderbook.cpp)
+
+add_executable(benchmark src/benchmark.cpp)
+
+enable_testing()
+add_test(NAME orderbook_correctness COMMAND test_orderbook)
