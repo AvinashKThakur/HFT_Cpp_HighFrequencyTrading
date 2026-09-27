@@ -8,8 +8,16 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
-add_compile_options(-Wall -Wextra)
+if(MSVC)
+    # MSVC equivalents: /O2 (optimize), /W4 (high warning level),
+    # /arch:AVX2 (closest equivalent to -march=native; adjust down to
+    # /arch:AVX or omit entirely if your CPU is older than ~2013).
+    add_compile_options(/W4 /O2 /arch:AVX2)
+else()
+    # GCC / Clang (Linux, macOS, MinGW on Windows)
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
+    add_compile_options(-Wall -Wextra)
+endif()
 
 include_directories(include)
 find_package(Threads REQUIRED)
